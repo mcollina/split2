@@ -7,13 +7,13 @@ function transform(chunk, enc, cb) {
     , i
 
   if (list.length >= 1) {
-    this.push(this._last + list.shift(), 'utf8')
+    this.push(this._last + list.shift())
   } else {
     remaining = this._last + remaining
   }
 
   for (i = 0; i < list.length; i++) {
-    this.push(list[i], 'utf8')
+    this.push(list[i])
   }
 
   this._last = remaining
@@ -23,7 +23,7 @@ function transform(chunk, enc, cb) {
 
 function flush(cb) {
   if (this._last)
-    this.push(this._last, 'utf8')
+    this.push(this._last)
 
   cb()
 }
