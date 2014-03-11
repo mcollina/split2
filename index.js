@@ -2,7 +2,7 @@
 var through = require('through2')
 
 function transform(chunk, enc, cb) {
-  var list = chunk.toString('utf8').split('\n')
+  var list = chunk.split(this.separator)
     , remaining = list.pop()
     , i
 
@@ -28,11 +28,16 @@ function flush(cb) {
   cb()
 }
 
-function split() {
+function split(options) {
 
-  var stream = through({ encoding: 'utf8' }, transform, flush)
+  options = options || {}
+  options.decodeStrings = false
+  options.encoding = 'utf8'
+
+  var stream = through(options, transform, flush)
 
   stream._last = ''
+  stream.separator = options.separator || '\n'
 
   return stream
 }

@@ -30,7 +30,7 @@ test('split two lines on two writes', function(t) {
   input.end()
 })
 
-test('accumulate multiple write', function(t) {
+test('accumulate multiple writes', function(t) {
   t.plan(1)
 
   var input = split()
@@ -42,4 +42,16 @@ test('accumulate multiple write', function(t) {
   input.write('hello')
   input.write('world')
   input.end()
+})
+
+test('split using a custom char', function(t) {
+  t.plan(1)
+
+  var input = split({ separator: '~' })
+
+  input.pipe(strcb(function(err, list) {
+    t.deepEqual(list, ['hello', 'world'])
+  }))
+
+  input.end('hello~world')
 })
