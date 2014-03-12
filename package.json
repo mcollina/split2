@@ -1,6 +1,6 @@
 {
   "name": "split2",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "split a Text Stream into a Line Stream, using Stream 2",
   "main": "index.js",
   "scripts": {
@@ -9,13 +9,13 @@
   "pre-commit": [
     "test"
   ],
-  "website": "https://github.com/mcollina/mqemitter",
+  "website": "https://github.com/mcollina/split2",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mcollina/mqemitter.git"
+    "url": "https://github.com/mcollina/split2.git"
   },
   "bugs": {
-    "url": "http://github.com/mcollina/mqemitter/issues"
+    "url": "http://github.com/mcollina/split2/issues"
   },
   "author": "Matteo Collina <hello@matteocollina.com>",
   "license": "ISC",
