@@ -53,7 +53,7 @@ function split(matcher, mapper, options) {
   stream._readableState.objectMode = true;
 
   stream._last = ''
-  stream.matcher = matcher || '\n'
+  stream.matcher = matcher || /\r?\n/
   stream.mapper = mapper || noop
 
   return stream

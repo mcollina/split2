@@ -98,3 +98,15 @@ test('support a mapper function', function(t) {
   input.write('\n')
   input.end(JSON.stringify(b))
 })
+
+test('split lines windows-style', function(t) {
+  t.plan(1)
+
+  var input = split()
+
+  input.pipe(strcb(function(err, list) {
+    t.deepEqual(list, ['hello', 'world'])
+  }))
+
+  input.end('hello\r\nworld')
+})
