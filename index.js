@@ -19,7 +19,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 var through = require('through2')
 
 function transform(chunk, enc, cb) {
-  var list = chunk.split(this.matcher)
+  var list = chunk.toString('utf8').split(this.matcher)
     , remaining = list.pop()
     , i
 
@@ -62,7 +62,6 @@ function split(matcher, mapper, options) {
   }
 
   options = options || {}
-  options.decodeStrings = false
 
   var stream = through(options, transform, flush)
 

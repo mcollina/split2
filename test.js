@@ -110,3 +110,15 @@ test('split lines windows-style', function(t) {
 
   input.end('hello\r\nworld')
 })
+
+test('splits a buffer', function(t) {
+  t.plan(1)
+
+  var input = split()
+
+  input.pipe(strcb(function(err, list) {
+    t.deepEqual(list, ['hello', 'world'])
+  }))
+
+  input.end(new Buffer('hello\nworld'))
+})
