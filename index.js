@@ -24,13 +24,13 @@ function transform(chunk, enc, cb) {
     , i
 
   if (list.length >= 1) {
-    this.push(this.mapper((this._last + list.shift())))
+    push(this, this.mapper((this._last + list.shift())))
   } else {
     remaining = this._last + remaining
   }
 
   for (i = 0; i < list.length; i++) {
-    this.push(this.mapper(list[i]))
+    push(this, this.mapper(list[i]))
   }
 
   this._last = remaining
@@ -40,9 +40,14 @@ function transform(chunk, enc, cb) {
 
 function flush(cb) {
   if (this._last)
-    this.push(this.mapper(this._last))
+    push(this, this.mapper(this._last))
 
   cb()
+}
+
+function push(self, val) {
+  if (val !== undefined)
+    self.push(val)
 }
 
 function noop(incoming) {
