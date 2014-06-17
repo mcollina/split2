@@ -122,3 +122,15 @@ test('splits a buffer', function(t) {
 
   input.end(new Buffer('hello\nworld'))
 })
+
+test('do not end on undefined', function(t) {
+  t.plan(1)
+
+  var input = split(function(line) {})
+
+  input.pipe(strcb(function(err, list) {
+    t.deepEqual(list, [])
+  }))
+
+  input.end(new Buffer('hello\nworld'))
+})
