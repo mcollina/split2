@@ -26,6 +26,25 @@ is directly passed as a
 [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform_1)
 option.
 
+Calling `.destroy` will make the stream emit `close`. Use this to perform cleanup logic
+
+``` js
+var splitFile = function(filename) {
+  var file = fs.createReadStream(filename)
+
+  return file
+    .pipe(split2())
+    .on('close', function() {
+      // destroy the file stream in case the split stream was destroyed
+      file.destroy()
+    })
+}
+
+var stream = splitFile('my-file.txt')
+
+stream.destroy() // will destroy the input file stream
+```
+
 # NDJ - Newline Delimited Json
 
 `split2` accepts a function which transforms each line.
