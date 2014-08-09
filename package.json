@@ -20,8 +20,8 @@
   "author": "Matteo Collina <hello@matteocollina.com>",
   "license": "ISC",
   "devDependencies": {
-    "tap": "~0.4.8",
-    "pre-commit": "0.0.4",
+    "tap": "~0.4.12",
+    "pre-commit": "0.0.9",
     "callback-stream": "~1.0.2"
   },
   "dependencies": {
