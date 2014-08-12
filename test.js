@@ -134,3 +134,16 @@ test('do not end on undefined', function(t) {
 
   input.end(new Buffer('hello\nworld'))
 })
+
+test('has destroy method', function(t) {
+  t.plan(1)
+
+  var input = split(function(line) {})
+
+  input.on('close', function() {
+    t.ok(true, 'close emitted')
+    t.end()
+  })
+
+  input.destroy()
+})
