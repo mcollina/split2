@@ -1,7 +1,7 @@
 {
   "name": "split2",
   "version": "0.2.1",
-  "description": "split a Text Stream into a Line Stream, using Stream 2",
+  "description": "split a Text Stream into a Line Stream, using Stream 3",
   "main": "index.js",
   "scripts": {
     "test": "tap test.js"
@@ -25,6 +25,6 @@
     "callback-stream": "~1.0.2"
   },
   "dependencies": {
-    "through2": "~0.6.1"
+    "through2": "~2.0.0"
   }
 }
