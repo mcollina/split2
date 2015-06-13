@@ -5,7 +5,7 @@
 Break up a stream and reassemble it so that each line is a chunk.
 `split2` is inspired by [@dominictarr](https://github.com/dominictarr) [`split`](https://github.com/dominictarr) module,
 and it is totally API compatible with it.
-However, it is based on [`through2`](https://github.com/rvagg/through2) by [@rvagg](https://github.com/rvagg) and it is fully based on Stream2.
+However, it is based on [`through2`](https://github.com/rvagg/through2) by [@rvagg](https://github.com/rvagg) and it is fully based on Stream3.
 
 `matcher` may be a `String`, or a `RegExp`. Example, read every line in a file ...
 
