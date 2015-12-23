@@ -147,3 +147,50 @@ test('has destroy method', function(t) {
 
   input.destroy()
 })
+
+test('support custom matcher and mapper', function(t) {
+  t.plan(2)
+
+  var a = { a: '42' }
+    , b = { b: '24' }
+  var input = split("~", JSON.parse)
+
+  input.pipe(objcb(function(err, list) {
+    t.notOk(err, 'no errors')
+    t.deepEqual(list, [a, b])
+  }))
+
+  input.write(JSON.stringify(a))
+  input.write('~')
+  input.end(JSON.stringify(b))
+})
+
+test('support custom matcher and options', function(t) {
+  t.plan(2)
+
+  var input = split("~", { highWatermark: 2 })
+
+  input.pipe(strcb(function(err, list) {
+    t.notOk(err, 'no errors')
+    t.deepEqual(list, ['hello', 'world'])
+  }))
+
+  input.end('hello~world')
+})
+
+test('support mapper and options', function(t) {
+  t.plan(2)
+
+  var a = { a: '42' }
+    , b = { b: '24' }
+  var input = split(JSON.parse, { highWaterMark: 2 })
+
+  input.pipe(objcb(function(err, list) {
+    t.notOk(err, 'no errors')
+    t.deepEqual(list, [a, b])
+  }))
+
+  input.write(JSON.stringify(a))
+  input.write('\n')
+  input.end(JSON.stringify(b))
+})
