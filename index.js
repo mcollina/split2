@@ -56,17 +56,39 @@ function noop(incoming) {
 
 function split(matcher, mapper, options) {
 
-  if (typeof matcher === 'object' && !(matcher instanceof RegExp)) {
-    options = matcher
-    matcher = null
-  }
-
-  if (typeof matcher === 'function') {
-    mapper = matcher
-    matcher = null
-  }
-
+  // Set defaults for any arguments not supplied.
+  matcher = matcher || /\r?\n/
+  mapper = mapper || noop
   options = options || {}
+
+  // Test arguments explicitly.
+  switch (arguments.length) {
+    case 1:
+      // If mapper is only argument.
+      if (typeof matcher === 'function') {
+        mapper = matcher
+        matcher = /\r?\n/
+      }
+      // If options is only argument.
+      else if (typeof matcher === 'object' && !(matcher instanceof RegExp)) {
+        options = matcher
+        matcher = /\r?\n/
+      }
+      break
+
+    case 2:
+      // If mapper and options are arguments.
+      if (typeof matcher === 'function') {
+        options = mapper
+        mapper = matcher
+        matcher = /\r?\n/
+      }
+      // If matcher and options are arguments.
+      else if (typeof mapper === 'object') {
+        options = mapper
+        mapper = noop
+      }
+  }
 
   var stream = through(options, transform, flush)
 
@@ -74,8 +96,8 @@ function split(matcher, mapper, options) {
   stream._readableState.objectMode = true;
 
   stream._last = ''
-  stream.matcher = matcher || /\r?\n/
-  stream.mapper = mapper || noop
+  stream.matcher = matcher
+  stream.mapper = mapper
 
   return stream
 }

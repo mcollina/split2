@@ -72,7 +72,7 @@ test('split using a custom regexp matcher', function(t) {
 test('support an option argument', function(t) {
   t.plan(2)
 
-  var input = split({ highWatermark: 2 })
+  var input = split({ highWaterMark: 2 })
 
   input.pipe(strcb(function(err, list) {
     t.notOk(err, 'no errors')
@@ -146,4 +146,64 @@ test('has destroy method', function(t) {
   })
 
   input.destroy()
+})
+
+test('support custom matcher and mapper', function(t) {
+  t.plan(4)
+
+  var a = { a: '42' }
+    , b = { b: '24' }
+  var input = split('~', JSON.parse)
+
+  t.equal(input.matcher, '~')
+  t.equal(typeof input.mapper, 'function')
+
+  input.pipe(objcb(function(err, list) {
+    t.notOk(err, 'no errors')
+    t.deepEqual(list, [a, b])
+  }))
+
+  input.write(JSON.stringify(a))
+  input.write('~')
+  input.end(JSON.stringify(b))
+})
+
+test('support custom matcher and options', function(t) {
+  t.plan(6)
+
+  var input = split('~', { highWaterMark: 1024 })
+
+  t.equal(input.matcher, '~')
+  t.equal(typeof input.mapper, 'function')
+  t.equal(input._readableState.highWaterMark, 1024)
+  t.equal(input._writableState.highWaterMark, 1024)
+
+  input.pipe(strcb(function(err, list) {
+    t.notOk(err, 'no errors')
+    t.deepEqual(list, ['hello', 'world'])
+  }))
+
+  input.end('hello~world')
+})
+
+test('support mapper and options', function(t) {
+  t.plan(6)
+
+  var a = { a: '42' }
+    , b = { b: '24' }
+  var input = split(JSON.parse, { highWaterMark: 1024 })
+
+  t.ok(input.matcher instanceof RegExp, 'matcher is RegExp')
+  t.equal(typeof input.mapper, 'function')
+  t.equal(input._readableState.highWaterMark, 1024)
+  t.equal(input._writableState.highWaterMark, 1024)
+
+  input.pipe(objcb(function(err, list) {
+    t.notOk(err, 'no errors')
+    t.deepEqual(list, [a, b])
+  }))
+
+  input.write(JSON.stringify(a))
+  input.write('\n')
+  input.end(JSON.stringify(b))
 })
