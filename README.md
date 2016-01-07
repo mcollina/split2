@@ -1,6 +1,6 @@
 # Split2(matcher, mapper, options)
 
-[![build status](https://secure.travis-ci.org/mcollina/split2.png)](http://travis-ci.org/mcollina/split2)
+[![build status](https://secure.travis-ci.org/mcollina/split2.svg)](http://travis-ci.org/mcollina/split2)
 
 Break up a stream and reassemble it so that each line is a chunk.
 `split2` is inspired by [@dominictarr](https://github.com/dominictarr) [`split`](https://github.com/dominictarr) module,
