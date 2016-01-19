@@ -274,7 +274,7 @@ test('truncated utf-8 char', function (t) {
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
-    t.deepEqual(list, ['烫'])
+    t.deepEqual(list, ['烫' + new Buffer('e7', 'hex').toString()])
   }))
 
   var str = '烫烫'

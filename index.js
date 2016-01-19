@@ -34,6 +34,9 @@ function transform (chunk, enc, cb) {
 }
 
 function flush (cb) {
+  // forward any gibberish left in there
+  this._last += this._decoder.end()
+
   if (this._last) {
     push(this, this.mapper(this._last))
   }
