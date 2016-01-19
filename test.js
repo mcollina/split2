@@ -217,5 +217,9 @@ test('split utf8 chars', function(t) {
     t.deepEqual(list, ['烫烫烫', '锟斤拷'])
   }))
 
-  input.end("烫烫烫\r\n锟斤拷")
+  var buf = new Buffer("烫烫烫\r\n锟斤拷", "utf8");
+  for (var i = 0; i < buf.length; ++i) {
+    input.write(buf.slice(i, i + 1))
+  }
+  input.end();
 })

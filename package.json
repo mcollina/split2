@@ -4,7 +4,7 @@
   "description": "split a Text Stream into a Line Stream, using Stream 3",
   "main": "index.js",
   "scripts": {
-    "test": "tap test.js"
+    "test": "tap -b test.js"
   },
   "pre-commit": [
     "test"
@@ -25,6 +25,8 @@
     "tap": "^5.0.0"
   },
   "dependencies": {
-    "through2": "~2.0.0"
+    "bl": "^1.0.1",
+    "through2": "~2.0.0",
+    "utf-8-validate": "^1.2.1"
   }
 }

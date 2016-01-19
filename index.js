@@ -17,30 +17,39 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 'use strict';
 
 var through = require('through2')
+var isValid = require('utf-8-validate').Validation.isValidUTF8
+var bl = require('bl')
 
 function transform(chunk, enc, cb) {
-  var list = chunk.toString('utf8').split(this.matcher)
-    , remaining = list.pop()
+  this._list.append(chunk)
+
+  if (!isValid(chunk)) {
+    cb()
+    return
+  }
+
+  var needsSplit = chunk.toString('utf8').match(this.matcher)
+    , list
+    , remaining
     , i
 
-  if (list.length >= 1) {
-    push(this, this.mapper((this._last + list.shift())))
-  } else {
-    remaining = this._last + remaining
+  if (needsSplit) {
+    list = this._list.toString('utf8').split(this.matcher)
+    if (list) {
+      this._list.consume(this._list.length)
+      this._list.append(list.pop())
+      for (i = 0; i < list.length; i++) {
+        push(this, this.mapper(list[i]))
+      }
+    }
   }
-
-  for (i = 0; i < list.length; i++) {
-    push(this, this.mapper(list[i]))
-  }
-
-  this._last = remaining
 
   cb()
 }
 
 function flush(cb) {
-  if (this._last)
-    push(this, this.mapper(this._last))
+  if (this._list.length > 0)
+    push(this, this.mapper(this._list.toString('utf8')))
 
   cb()
 }
@@ -95,7 +104,7 @@ function split(matcher, mapper, options) {
   // this stream is in objectMode only in the readable part
   stream._readableState.objectMode = true;
 
-  stream._last = ''
+  stream._list = bl()
   stream.matcher = matcher
   stream.mapper = mapper
 
