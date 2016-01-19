@@ -224,7 +224,7 @@ test('split utf8 chars', function(t) {
   input.end();
 })
 
-test('split utf8 chars', function(t) {
+test('split utf8 chars 2by2', function(t) {
   t.plan(1)
 
   var input = split()
