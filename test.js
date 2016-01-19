@@ -266,3 +266,20 @@ test('split lines when the \n comes at the end of a chunk', function (t) {
   input.write('hello\n')
   input.end('world')
 })
+
+test('truncated utf-8 char', function (t) {
+  t.plan(2)
+
+  var input = split()
+
+  input.pipe(strcb(function (err, list) {
+    t.error(err)
+    t.deepEqual(list, ['烫'])
+  }))
+
+  var str = '烫烫'
+  var buf = new Buffer(str, 'utf8')
+
+  input.write(buf.slice(0, 3))
+  input.end(buf.slice(3, 4))
+})
