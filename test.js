@@ -207,3 +207,15 @@ test('support mapper and options', function(t) {
   input.write('\n')
   input.end(JSON.stringify(b))
 })
+
+test('split utf8 chars', function(t) {
+  t.plan(1)
+
+  var input = split()
+
+  input.pipe(strcb(function(err, list) {
+    t.deepEqual(list, ['烫烫烫', '锟斤拷'])
+  }))
+
+  input.end("烫烫烫\r\n锟斤拷")
+})
