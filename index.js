@@ -17,31 +17,26 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 'use strict';
 
 var through = require('through2')
-var bl = require('bl')
+var StringDecoder = require('string_decoder').StringDecoder
 
 function transform(chunk, enc, cb) {
-  this._list.append(chunk)
+  this._last += this._decoder.write(chunk)
 
-  var needsSplit = chunk.toString('utf8').match(this.matcher)
-    , list
-    , remaining
+  var list = this._last.toString('utf8').split(this.matcher)
     , i
 
-  if (needsSplit) {
-    list = this._list.toString('utf8').split(this.matcher)
-    this._list.consume(this._list.length)
-    this._list.append(list.pop())
-    for (i = 0; i < list.length; i++) {
-      push(this, this.mapper(list[i]))
-    }
+  this._last = list.pop()
+
+  for (i = 0; i < list.length; i++) {
+    push(this, this.mapper(list[i]))
   }
 
   cb()
 }
 
 function flush(cb) {
-  if (this._list.length > 0)
-    push(this, this.mapper(this._list.toString('utf8')))
+  if (this._last)
+    push(this, this.mapper(this._last))
 
   cb()
 }
@@ -96,7 +91,8 @@ function split(matcher, mapper, options) {
   // this stream is in objectMode only in the readable part
   stream._readableState.objectMode = true;
 
-  stream._list = bl()
+  stream._last = ''
+  stream._decoder = new StringDecoder('utf8')
   stream.matcher = matcher
   stream.mapper = mapper
 
