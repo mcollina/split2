@@ -22,7 +22,7 @@ var StringDecoder = require('string_decoder').StringDecoder
 function transform (chunk, enc, cb) {
   this._last += this._decoder.write(chunk)
 
-  var list = this._last.toString('utf8').split(this.matcher)
+  var list = this._last.split(this.matcher)
 
   this._last = list.pop()
 
