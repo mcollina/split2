@@ -14,44 +14,44 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-'use strict';
+'use strict'
 
 var through = require('through2')
 var StringDecoder = require('string_decoder').StringDecoder
 
-function transform(chunk, enc, cb) {
+function transform (chunk, enc, cb) {
   this._last += this._decoder.write(chunk)
 
   var list = this._last.toString('utf8').split(this.matcher)
-    , i
 
   this._last = list.pop()
 
-  for (i = 0; i < list.length; i++) {
+  for (var i = 0; i < list.length; i++) {
     push(this, this.mapper(list[i]))
   }
 
   cb()
 }
 
-function flush(cb) {
-  if (this._last)
+function flush (cb) {
+  if (this._last) {
     push(this, this.mapper(this._last))
+  }
 
   cb()
 }
 
-function push(self, val) {
-  if (val !== undefined)
+function push (self, val) {
+  if (val !== undefined) {
     self.push(val)
+  }
 }
 
-function noop(incoming) {
+function noop (incoming) {
   return incoming
 }
 
-function split(matcher, mapper, options) {
-
+function split (matcher, mapper, options) {
   // Set defaults for any arguments not supplied.
   matcher = matcher || /\r?\n/
   mapper = mapper || noop
@@ -64,9 +64,8 @@ function split(matcher, mapper, options) {
       if (typeof matcher === 'function') {
         mapper = matcher
         matcher = /\r?\n/
-      }
       // If options is only argument.
-      else if (typeof matcher === 'object' && !(matcher instanceof RegExp)) {
+      } else if (typeof matcher === 'object' && !(matcher instanceof RegExp)) {
         options = matcher
         matcher = /\r?\n/
       }
@@ -78,9 +77,8 @@ function split(matcher, mapper, options) {
         options = mapper
         mapper = matcher
         matcher = /\r?\n/
-      }
       // If matcher and options are arguments.
-      else if (typeof mapper === 'object') {
+      } else if (typeof mapper === 'object') {
         options = mapper
         mapper = noop
       }
@@ -89,7 +87,7 @@ function split(matcher, mapper, options) {
   var stream = through(options, transform, flush)
 
   // this stream is in objectMode only in the readable part
-  stream._readableState.objectMode = true;
+  stream._readableState.objectMode = true
 
   stream._last = ''
   stream._decoder = new StringDecoder('utf8')

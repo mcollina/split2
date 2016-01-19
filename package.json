@@ -4,7 +4,7 @@
   "description": "split a Text Stream into a Line Stream, using Stream 3",
   "main": "index.js",
   "scripts": {
-    "test": "tap -b test.js"
+    "test": "standard && tap -b test.js"
   },
   "pre-commit": [
     "test"
