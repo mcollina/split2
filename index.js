@@ -29,12 +29,10 @@ function transform(chunk, enc, cb) {
 
   if (needsSplit) {
     list = this._list.toString('utf8').split(this.matcher)
-    if (list) {
-      this._list.consume(this._list.length)
-      this._list.append(list.pop())
-      for (i = 0; i < list.length; i++) {
-        push(this, this.mapper(list[i]))
-      }
+    this._list.consume(this._list.length)
+    this._list.append(list.pop())
+    for (i = 0; i < list.length; i++) {
+      push(this, this.mapper(list[i]))
     }
   }
 
