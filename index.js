@@ -17,16 +17,10 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 'use strict';
 
 var through = require('through2')
-var isValid = require('utf-8-validate').Validation.isValidUTF8
 var bl = require('bl')
 
 function transform(chunk, enc, cb) {
   this._list.append(chunk)
-
-  if (!isValid(chunk)) {
-    cb()
-    return
-  }
 
   var needsSplit = chunk.toString('utf8').match(this.matcher)
     , list
