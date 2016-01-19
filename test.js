@@ -223,3 +223,20 @@ test('split utf8 chars', function(t) {
   }
   input.end();
 })
+
+test('split utf8 chars', function(t) {
+  t.plan(1)
+
+  var input = split()
+
+  input.pipe(strcb(function(err, list) {
+    t.deepEqual(list, ['烫烫烫', '烫烫烫'])
+  }))
+
+  var str = "烫烫烫\r\n烫烫烫";
+  var buf = new Buffer(str, "utf8");
+  for (var i = 0; i < buf.length; i+=2) {
+    input.write(buf.slice(i, i + 2))
+  }
+  input.end();
+})
