@@ -27,7 +27,7 @@ function transform (chunk, enc, cb) {
   this._last = list.pop()
 
   for (var i = 0; i < list.length; i++) {
-    push(this, this.mapper(list[i]))
+    push(this, list[i])
   }
 
   cb()
@@ -38,13 +38,18 @@ function flush (cb) {
   this._last += this._decoder.end()
 
   if (this._last) {
-    push(this, this.mapper(this._last))
+    push(this, this._last)
   }
 
   cb()
 }
 
 function push (self, val) {
+  try {
+    val = self.mapper(val)
+  } catch (err) {
+    return self.emit('error', err)
+  }
   if (val !== undefined) {
     self.push(val)
   }
