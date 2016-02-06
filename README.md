@@ -3,7 +3,7 @@
 [![build status](https://secure.travis-ci.org/mcollina/split2.svg)](http://travis-ci.org/mcollina/split2)
 
 Break up a stream and reassemble it so that each line is a chunk.
-`split2` is inspired by [@dominictarr](https://github.com/dominictarr) [`split`](https://github.com/dominictarr) module,
+`split2` is inspired by [@dominictarr](https://github.com/dominictarr) [`split`](https://github.com/dominictarr/split) module,
 and it is totally API compatible with it.
 However, it is based on [`through2`](https://github.com/rvagg/through2) by [@rvagg](https://github.com/rvagg) and it is fully based on Stream3.
 
@@ -56,6 +56,9 @@ fs.createReadStream(file)
     //each chunk now is a a js object
   })
 ```
+
+However, in [@dominictarr](https://github.com/dominictarr) [`split`](https://github.com/dominictarr/split) the mapper
+is wrapped in a try-catch, while here it is not: if your parsing logic can throw, wrap it yourself.
 
 # License
 
