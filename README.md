@@ -26,6 +26,9 @@ is directly passed as a
 [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform_1)
 option.
 
+Additionally, the `.maxLength` option is implemented, which will make the split stream throw an error
+if the buffer size exceeds `.maxLength`.
+
 Calling `.destroy` will make the stream emit `close`. Use this to perform cleanup logic
 
 ``` js

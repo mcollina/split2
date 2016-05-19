@@ -283,3 +283,16 @@ test('truncated utf-8 char', function (t) {
   input.write(buf.slice(0, 3))
   input.end(buf.slice(3, 4))
 })
+
+test('maximum buffer limit', function (t) {
+  t.plan(1)
+
+  var input = split({ maxLength: 2 })
+
+  input.pipe(strcb(function (err, list) {
+    t.ok(err)
+  }))
+
+  input.write('hey')
+})
+
