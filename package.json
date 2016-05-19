@@ -23,7 +23,7 @@
     "callback-stream": "^1.1.0",
     "fastbench": "^1.0.0",
     "pre-commit": "^1.1.2",
-    "standard": "^5.4.1",
+    "standard": "^7.0.0",
     "tap": "^5.0.0"
   },
   "dependencies": {
