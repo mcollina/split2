@@ -21,6 +21,9 @@ var StringDecoder = require('string_decoder').StringDecoder
 
 function transform (chunk, enc, cb) {
   this._last += this._decoder.write(chunk)
+  if (this._last.length > this.maxLength) {
+    return cb(new Error('maximum buffer reached'))
+  }
 
   var list = this._last.split(this.matcher)
 
@@ -96,6 +99,7 @@ function split (matcher, mapper, options) {
   stream._decoder = new StringDecoder('utf8')
   stream.matcher = matcher
   stream.mapper = mapper
+  stream.maxLength = options.maxLength
 
   return stream
 }
