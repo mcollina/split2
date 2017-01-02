@@ -65,7 +65,7 @@ is wrapped in a try-catch, while here it is not: if your parsing logic can throw
 
 # License
 
-Copyright (c) 2014-2016, Matteo Collina <hello@matteocollina.com>
+Copyright (c) 2014-2017, Matteo Collina <hello@matteocollina.com>
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
