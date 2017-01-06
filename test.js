@@ -218,6 +218,21 @@ test('support mapper and options', function (t) {
   input.end(JSON.stringify(b))
 })
 
+test('emit error if mapper throws', function (t) {
+  t.plan(1)
+
+  var a = { a: '42' }
+  var b = { b: '24' }
+  var input = split(JSON.parse)
+
+  input.on('error', function (err) {
+    t.ok(err)
+  })
+
+  input.write(JSON.stringify(a))
+  input.end(JSON.stringify(b))
+})
+
 test('split utf8 chars', function (t) {
   t.plan(2)
 
