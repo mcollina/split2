@@ -13,7 +13,7 @@ However, it is based on [`through2`](https://github.com/rvagg/through2) by [@rva
   fs.createReadStream(file)
     .pipe(split2())
     .on('data', function (line) {
-      //each chunk now is a seperate line!
+      //each chunk now is a separate line!
     })
 
 ```
