@@ -18,7 +18,7 @@ However, it is based on [`through2`](https://github.com/rvagg/through2) by [@rva
 
 ```
 
-`split` takes the same arguments as `string.split` except it defaults to '/\r?\n/' instead of ',', and the optional `limit` paremeter is ignored.
+`split` takes the same arguments as `string.split` except it defaults to '/\r?\n/', and the optional `limit` paremeter is ignored.
 [String#split](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/split)
 
 `split` takes an optional options object on it's third argument, which
