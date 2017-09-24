@@ -56,7 +56,7 @@ stream.destroy() // will destroy the input file stream
 fs.createReadStream(file)
   .pipe(split2(JSON.parse))
   .on('data', function (obj) {
-    //each chunk now is a a js object
+    //each chunk now is a js object
   })
 ```
 
