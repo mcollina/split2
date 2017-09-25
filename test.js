@@ -296,3 +296,8 @@ test('maximum buffer limit', function (t) {
   input.write('hey')
 })
 
+test('readable highWaterMark', function (t) {
+  var input = split()
+  t.equal(input._readableState.highWaterMark, 16)
+  t.end()
+})
