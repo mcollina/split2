@@ -95,6 +95,11 @@ function split (matcher, mapper, options) {
   // this stream is in objectMode only in the readable part
   stream._readableState.objectMode = true
 
+  // objectMode default hwm is 16 and not 16384
+  if (stream._readableState.highWaterMark && !options.highWaterMark) {
+    stream._readableState.highWaterMark = 16
+  }
+
   stream._last = ''
   stream._decoder = new StringDecoder('utf8')
   stream.matcher = matcher
