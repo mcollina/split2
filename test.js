@@ -3,6 +3,7 @@
 var test = require('tap').test
 var split = require('./')
 var callback = require('callback-stream')
+var Buffer = require('safe-buffer').Buffer
 var strcb = callback.bind(null, { decodeStrings: false })
 var objcb = callback.bind(null, { objectMode: true })
 
@@ -129,7 +130,7 @@ test('splits a buffer', function (t) {
     t.deepEqual(list, ['hello', 'world'])
   }))
 
-  input.end(new Buffer('hello\nworld'))
+  input.end(Buffer.from('hello\nworld'))
 })
 
 test('do not end on undefined', function (t) {
@@ -142,7 +143,7 @@ test('do not end on undefined', function (t) {
     t.deepEqual(list, [])
   }))
 
-  input.end(new Buffer('hello\nworld'))
+  input.end(Buffer.from('hello\nworld'))
 })
 
 test('has destroy method', function (t) {
@@ -228,7 +229,7 @@ test('split utf8 chars', function (t) {
     t.deepEqual(list, ['烫烫烫', '锟斤拷'])
   }))
 
-  var buf = new Buffer('烫烫烫\r\n锟斤拷', 'utf8')
+  var buf = Buffer.from('烫烫烫\r\n锟斤拷', 'utf8')
   for (var i = 0; i < buf.length; ++i) {
     input.write(buf.slice(i, i + 1))
   }
@@ -246,7 +247,7 @@ test('split utf8 chars 2by2', function (t) {
   }))
 
   var str = '烫烫烫\r\n烫烫烫'
-  var buf = new Buffer(str, 'utf8')
+  var buf = Buffer.from(str, 'utf8')
   for (var i = 0; i < buf.length; i += 2) {
     input.write(buf.slice(i, i + 2))
   }
@@ -274,11 +275,11 @@ test('truncated utf-8 char', function (t) {
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
-    t.deepEqual(list, ['烫' + new Buffer('e7', 'hex').toString()])
+    t.deepEqual(list, ['烫' + Buffer.from('e7', 'hex').toString()])
   }))
 
   var str = '烫烫'
-  var buf = new Buffer(str, 'utf8')
+  var buf = Buffer.from(str, 'utf8')
 
   input.write(buf.slice(0, 3))
   input.end(buf.slice(3, 4))
