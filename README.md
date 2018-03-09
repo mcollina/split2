@@ -1,5 +1,7 @@
 # Split2(matcher, mapper, options)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/mcollina/split2.svg)](https://greenkeeper.io/)
+
 [![build status](https://secure.travis-ci.org/mcollina/split2.svg)](http://travis-ci.org/mcollina/split2)
 
 Break up a stream and reassemble it so that each line is a chunk.

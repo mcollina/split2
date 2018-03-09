@@ -24,10 +24,15 @@
     "fastbench": "^1.0.0",
     "pre-commit": "^1.1.2",
     "safe-buffer": "^5.1.1",
-    "standard": "^10.0.0",
+    "standard": "^11.0.0",
     "tap": "^10.0.0"
   },
   "dependencies": {
     "through2": "^2.0.2"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "tap"
+    ]
   }
 }
