@@ -20,6 +20,7 @@
   "author": "Matteo Collina <hello@matteocollina.com>",
   "license": "ISC",
   "devDependencies": {
+    "binary-split": "^1.0.3",
     "callback-stream": "^1.1.0",
     "fastbench": "^1.0.0",
     "pre-commit": "^1.1.2",

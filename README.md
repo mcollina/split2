@@ -65,6 +65,17 @@ fs.createReadStream(file)
 However, in [@dominictarr](https://github.com/dominictarr) [`split`](https://github.com/dominictarr/split) the mapper
 is wrapped in a try-catch, while here it is not: if your parsing logic can throw, wrap it yourself.
 
+# Benchmark
+
+```bash
+$ node bench.js
+
+benchSplit*10000: 4241.612ms
+benchBinarySplit*10000: 2372.667ms
+benchSplit*10000: 2276.079ms
+benchBinarySplit*10000: 2332.015ms
+```
+
 # License
 
 Copyright (c) 2014-2017, Matteo Collina <hello@matteocollina.com>
