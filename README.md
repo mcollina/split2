@@ -7,7 +7,7 @@
 Break up a stream and reassemble it so that each line is a chunk.
 `split2` is inspired by [@dominictarr](https://github.com/dominictarr) [`split`](https://github.com/dominictarr/split) module,
 and it is totally API compatible with it.
-However, it is based on [`through2`](https://github.com/rvagg/through2) by [@rvagg](https://github.com/rvagg) and it is fully based on Stream3.
+However, it is based on Node.js core [`Transform`](https://nodejs.org/api/stream.html#stream_new_stream_transform_options) via [`readable-stream`](https://github.com/nodejs/readable-stream)
 
 `matcher` may be a `String`, or a `RegExp`. Example, read every line in a file ...
 
@@ -25,7 +25,7 @@ However, it is based on [`through2`](https://github.com/rvagg/through2) by [@rva
 
 `split` takes an optional options object on it's third argument, which
 is directly passed as a
-[Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform_1)
+[Transform](https://nodejs.org/api/stream.html#stream_new_stream_transform_options)
 option.
 
 Additionally, the `.maxLength` option is implemented, which will make the split stream throw an error
@@ -69,16 +69,17 @@ is wrapped in a try-catch, while here it is not: if your parsing logic can throw
 
 ```bash
 $ node bench.js
-
-benchSplit*10000: 4241.612ms
-benchBinarySplit*10000: 2372.667ms
-benchSplit*10000: 2276.079ms
-benchBinarySplit*10000: 2332.015ms
+benchSplit*10000: 1484.983ms
+benchBinarySplit*10000: 1484.080ms
+benchSplit*10000: 1407.334ms
+benchBinarySplit*10000: 1500.281ms
 ```
+
+Benchmark taken on Node 8.11.3, on a Macbook i5 2018.
 
 # License
 
-Copyright (c) 2014-2017, Matteo Collina <hello@matteocollina.com>
+Copyright (c) 2014-2018, Matteo Collina <hello@matteocollina.com>
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
