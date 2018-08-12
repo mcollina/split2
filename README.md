@@ -69,12 +69,13 @@ is wrapped in a try-catch, while here it is not: if your parsing logic can throw
 
 ```bash
 $ node bench.js
-
-benchSplit*10000: 4241.612ms
-benchBinarySplit*10000: 2372.667ms
-benchSplit*10000: 2276.079ms
-benchBinarySplit*10000: 2332.015ms
+benchSplit*10000: 1484.983ms
+benchBinarySplit*10000: 1484.080ms
+benchSplit*10000: 1407.334ms
+benchBinarySplit*10000: 1500.281ms
 ```
+
+Benchmark taken on Node 8.11.3, on a Macbook i5 2018.
 
 # License
 
