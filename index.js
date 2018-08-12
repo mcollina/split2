@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014-2016, Matteo Collina <hello@matteocollina.com>
+Copyright (c) 2014-2018, Matteo Collina <hello@matteocollina.com>
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -16,18 +16,20 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 'use strict'
 
-var through = require('through2')
-var StringDecoder = require('string_decoder').StringDecoder
+const { Transform } = require('readable-stream')
+const { StringDecoder } = require('string_decoder')
+const kLast = Symbol('last')
+const kDecoder = Symbol('decoder')
 
 function transform (chunk, enc, cb) {
-  this._last += this._decoder.write(chunk)
-  if (this._last.length > this.maxLength) {
+  this[kLast] += this[kDecoder].write(chunk)
+  if (this[kLast].length > this.maxLength) {
     return cb(new Error('maximum buffer reached'))
   }
 
-  var list = this._last.split(this.matcher)
+  var list = this[kLast].split(this.matcher)
 
-  this._last = list.pop()
+  this[kLast] = list.pop()
 
   for (var i = 0; i < list.length; i++) {
     push(this, this.mapper(list[i]))
@@ -38,10 +40,10 @@ function transform (chunk, enc, cb) {
 
 function flush (cb) {
   // forward any gibberish left in there
-  this._last += this._decoder.end()
+  this[kLast] += this[kDecoder].end()
 
-  if (this._last) {
-    push(this, this.mapper(this._last))
+  if (this[kLast]) {
+    push(this, this.mapper(this[kLast]))
   }
 
   cb()
@@ -90,18 +92,14 @@ function split (matcher, mapper, options) {
       }
   }
 
-  var stream = through(options, transform, flush)
+  options.transform = transform
+  options.flush = flush
+  options.readableObjectMode = true
 
-  // this stream is in objectMode only in the readable part
-  stream._readableState.objectMode = true
+  const stream = new Transform(options)
 
-  // objectMode default hwm is 16 and not 16384
-  if (stream._readableState.highWaterMark && !options.highWaterMark) {
-    stream._readableState.highWaterMark = 16
-  }
-
-  stream._last = ''
-  stream._decoder = new StringDecoder('utf8')
+  stream[kLast] = ''
+  stream[kDecoder] = new StringDecoder('utf8')
   stream.matcher = matcher
   stream.mapper = mapper
   stream.maxLength = options.maxLength
