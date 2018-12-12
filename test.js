@@ -302,3 +302,32 @@ test('readable highWaterMark', function (t) {
   t.equal(input._readableState.highWaterMark, 16)
   t.end()
 })
+
+test('maxLength < chunk size', function (t) {
+  t.plan(2)
+
+  var input = split({ maxLength: 2 })
+
+  input.pipe(strcb(function (err, list) {
+    t.error(err)
+    t.deepEqual(list, ['a', 'b'])
+  }))
+
+  input.end('a\nb')
+})
+
+test('maximum buffer limit w/skip', function (t) {
+  t.plan(2)
+
+  var input = split({ maxLength: 2, skipOverflow: true })
+
+  input.pipe(strcb(function (err, list) {
+    t.error(err)
+    t.deepEqual(list, ['a', 'b', 'c'])
+  }))
+
+  input.write('a\n123')
+  input.write('456')
+  input.write('789\nb\nc')
+  input.end()
+})

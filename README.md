@@ -28,8 +28,10 @@ is directly passed as a
 [Transform](https://nodejs.org/api/stream.html#stream_new_stream_transform_options)
 option.
 
-Additionally, the `.maxLength` option is implemented, which will make the split stream throw an error
-if the buffer size exceeds `.maxLength`.
+Additionally, the `.maxLength` and `.skipOverflow` options are implemented, which set limits on the internal
+buffer size and the stream's behavior when the limit is exceeded. There is no limit unless `maxLength` is set. When
+the internal buffer size exceeds `maxLength`, the stream emits an error by default. You may also set `skipOverflow` to
+true to suppress the error and instead skip past any lines that cause the internal buffer to exceed `maxLength`.
 
 Calling `.destroy` will make the stream emit `close`. Use this to perform cleanup logic
 
