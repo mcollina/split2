@@ -22,18 +22,29 @@ const kLast = Symbol('last')
 const kDecoder = Symbol('decoder')
 
 function transform (chunk, enc, cb) {
-  this[kLast] += this[kDecoder].write(chunk)
-  if (this[kLast].length > this.maxLength) {
-    return cb(new Error('maximum buffer reached'))
-  }
+  var list
+  if (this.overflow) { // Line buffer is full. Skip to start of next line.
+    var buf = this[kDecoder].write(chunk)
+    list = buf.split(this.matcher)
 
-  var list = this[kLast].split(this.matcher)
+    if (list.length === 1) return cb() // Line ending not found. Discard entire chunk.
+
+    // Line ending found. Discard trailing fragment of previous line and reset overflow state.
+    list.shift()
+    this.overflow = false
+  } else {
+    this[kLast] += this[kDecoder].write(chunk)
+    list = this[kLast].split(this.matcher)
+  }
 
   this[kLast] = list.pop()
 
   for (var i = 0; i < list.length; i++) {
     push(this, this.mapper(list[i]))
   }
+
+  this.overflow = this[kLast].length > this.maxLength
+  if (this.overflow && !this.skipOverflow) return cb(new Error('maximum buffer reached'))
 
   cb()
 }
@@ -103,6 +114,8 @@ function split (matcher, mapper, options) {
   stream.matcher = matcher
   stream.mapper = mapper
   stream.maxLength = options.maxLength
+  stream.skipOverflow = options.skipOverflow
+  stream.overflow = false
 
   return stream
 }
