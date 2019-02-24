@@ -35,6 +35,22 @@ test('split two lines on two writes', function (t) {
   input.end()
 })
 
+test('split four lines on three writes', function (t) {
+  t.plan(2)
+
+  var input = split()
+
+  input.pipe(strcb(function (err, list) {
+    t.error(err)
+    t.deepEqual(list, ['hello', 'world', 'bye', 'world'])
+  }))
+
+  input.write('hello\nwor')
+  input.write('ld\nbye\nwo')
+  input.write('rld')
+  input.end()
+})
+
 test('accumulate multiple writes', function (t) {
   t.plan(2)
 
