@@ -103,6 +103,7 @@ function split (matcher, mapper, options) {
       }
   }
 
+  options = Object.assign({}, options)
   options.transform = transform
   options.flush = flush
   options.readableObjectMode = true
