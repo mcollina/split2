@@ -347,3 +347,17 @@ test('maximum buffer limit w/skip', function (t) {
   input.write('789\nb\nc')
   input.end()
 })
+
+test("don't modify the options object", function (t) {
+  t.plan(2)
+
+  var options = {}
+  var input = split(options)
+
+  input.pipe(strcb(function (err, list) {
+    t.error(err)
+    t.same(options, {})
+  }))
+
+  input.end()
+})
