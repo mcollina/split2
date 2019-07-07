@@ -28,10 +28,21 @@ is directly passed as a
 [Transform](https://nodejs.org/api/stream.html#stream_new_stream_transform_options)
 option.
 
-Additionally, the `.maxLength` and `.skipOverflow` options are implemented, which set limits on the internal
-buffer size and the stream's behavior when the limit is exceeded. There is no limit unless `maxLength` is set. When
-the internal buffer size exceeds `maxLength`, the stream emits an error by default. You may also set `skipOverflow` to
-true to suppress the error and instead skip past any lines that cause the internal buffer to exceed `maxLength`.
+Additionally, the `.maxLength`, `.skipOverflow` and `keepMatcher` options are implemented, which set limits on the internal
+buffer size, the stream's behavior when the limit is exceeded and whether to keep the line matcher characters at the end of 
+each line. There is no limit unless `maxLength` is set. When the internal buffer size exceeds `maxLength`, the stream emits an 
+error by default. You may also set `skipOverflow` to true to suppress the error and instead skip past any lines that cause the
+internal buffer to exceed `maxLength`. By default, line matchers are thrown away. If you set keepMatcher to true, trailing
+matcher characters at the end of the line are retained. You will also need to split by a regular expression with a matching 
+group as illustrated below.
+
+```js
+  fs.createReadStream(file)
+    .pipe(split(/(\r?\n)/,{keepMatcher:true}))
+    .on('data', function (line) {
+      //each chunk now is a separate line, and retains the \r\n or \n at the end!
+    })
+```
 
 Calling `.destroy` will make the stream emit `close`. Use this to perform cleanup logic
 

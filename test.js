@@ -361,3 +361,19 @@ test("don't modify the options object", function (t) {
 
   input.end()
 })
+
+test('keep newlines when using keepDelimiter option', function (t) {
+  t.plan(3)
+
+  var options = { keepMatcher: true }
+  var input = split(/(\n)/, options)
+
+  input.pipe(strcb(function (err, list) {
+    t.error(err)
+    t.equal(list[0], 'a line including terminating newline\n')
+    t.equal(list[1], 'and the next without a newline')
+  }))
+
+  input.write('a line including terminating newline\nand the next without a newline')
+  input.end()
+})

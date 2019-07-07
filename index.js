@@ -35,12 +35,19 @@ function transform (chunk, enc, cb) {
   } else {
     this[kLast] += this[kDecoder].write(chunk)
     list = this[kLast].split(this.matcher)
+
+    if (this.keepMatcher) {
+      let l = []
+      list.length % 2 && list.push('') // Add trailing empty string if odd elements
+      for (var i = 0; i < list.length; i += 2) push(l, list[i] + list[i + 1])
+      list = l
+    }
   }
 
   this[kLast] = list.pop()
 
-  for (var i = 0; i < list.length; i++) {
-    push(this, this.mapper(list[i]))
+  for (var j = 0; j < list.length; j++) {
+    push(this, this.mapper(list[j]))
   }
 
   this.overflow = this[kLast].length > this.maxLength
@@ -116,6 +123,7 @@ function split (matcher, mapper, options) {
   stream.mapper = mapper
   stream.maxLength = options.maxLength
   stream.skipOverflow = options.skipOverflow
+  stream.keepMatcher = options.keepMatcher
   stream.overflow = false
 
   return stream
