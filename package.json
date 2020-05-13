@@ -26,7 +26,7 @@
     "pre-commit": "^1.1.2",
     "safe-buffer": "^5.1.1",
     "standard": "^14.0.0",
-    "tap": "^12.0.0"
+    "tap": "^13.1.11"
   },
   "dependencies": {
     "readable-stream": "^3.0.0"
