@@ -1,6 +1,6 @@
 'use strict'
 
-var test = require('tap').test
+var test = require('tape')
 var split = require('./')
 var callback = require('callback-stream')
 var Buffer = require('safe-buffer').Buffer
