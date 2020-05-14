@@ -20,7 +20,7 @@ jobs:
 
       - name: Install
         run: |
-          npm install --production && npm install tape
+          npm install
 
       - name: Run tests
         run: |
