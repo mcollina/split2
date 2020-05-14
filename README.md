@@ -1,8 +1,6 @@
 # Split2(matcher, mapper, options)
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/mcollina/split2.svg)](https://greenkeeper.io/)
-
-[![build status](https://secure.travis-ci.org/mcollina/split2.svg)](http://travis-ci.org/mcollina/split2)
+![ci](https://github.com/mcollina/split2/workflows/ci/badge.svg)
 
 Break up a stream and reassemble it so that each line is a chunk.
 `split2` is inspired by [@dominictarr](https://github.com/dominictarr) [`split`](https://github.com/dominictarr/split) module,
