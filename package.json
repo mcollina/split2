@@ -9,7 +9,7 @@
     "coverage": "nyc --reporter=html --reporter=cobertura --reporter=text tape test/test.js",
     "test:report": "npm run lint && npm run unit:report",
     "test": "npm run lint && npm run unit",
-    "legacy": "tape test/test.js"
+    "legacy": "tape test.js"
   },
   "pre-commit": [
     "test"
