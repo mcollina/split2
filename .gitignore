@@ -5,3 +5,4 @@ libleveldb.a
 test-data/
 _benchdb_*
 *.sw*
+.nyc_output
