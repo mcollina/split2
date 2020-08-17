@@ -380,7 +380,6 @@ test('mapper throws on transform', function (t) {
 
   var error = new Error()
   var input = split(function (l) {
-    console.log(l)
     throw error
   })
 

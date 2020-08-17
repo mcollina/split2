@@ -60,10 +60,13 @@ fs.createReadStream(file)
   .on('data', function (obj) {
     //each chunk now is a js object
   })
+  .on("error", function(error) => {
+    //handling parsing errors
+  })
 ```
 
 However, in [@dominictarr](https://github.com/dominictarr) [`split`](https://github.com/dominictarr/split) the mapper
-is wrapped in a try-catch, while here it is not: if your parsing logic can throw, wrap it yourself.
+is wrapped in a try-catch, while here it is not: if your parsing logic can throw, wrap it yourself. Otherwise, you can also use the stream error handling when mapper function throw.
 
 # Benchmark
 
