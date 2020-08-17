@@ -7,3 +7,4 @@ _benchdb_*
 *.sw*
 .travis.yml
 .github
+.nyc_output
