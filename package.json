@@ -3,6 +3,7 @@
   "version": "3.2.2",
   "description": "split a Text Stream into a Line Stream, using Stream 3",
   "main": "index.js",
+  "files": [],
   "scripts": {
     "lint": "standard --verbose",
     "unit": "nyc --lines 100 --branches 100 --functions 100 --check-coverage --reporter=text tape test.js",
