@@ -50,7 +50,11 @@ function transform (chunk, enc, cb) {
   this.overflow = this[kLast].length > this.maxLength
   if (this.overflow && !this.skipOverflow) return cb(new Error('maximum buffer reached'))
 
-  cb()
+  if(this.asyncTransform) {
+    setImmediate(cb)
+  } else {
+    cb()
+  }
 }
 
 function flush (cb) {
@@ -124,6 +128,7 @@ function split (matcher, mapper, options) {
   stream.mapper = mapper
   stream.maxLength = options.maxLength
   stream.skipOverflow = options.skipOverflow
+  stream.asyncTransform = options.asyncTransform
   stream.overflow = false
 
   return stream

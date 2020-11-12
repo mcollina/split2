@@ -390,3 +390,24 @@ test('mapper throws on transform', function (t) {
   input.write('\n')
   input.end('b')
 })
+
+test('async transform', function (t) {
+  t.plan(3)
+
+  var input = split({ asyncTransform: true })
+
+  let asyncCalled = false
+  setTimeout(() => {
+    asyncCalled = true
+  }, 0);
+
+  input.pipe(strcb(function (err, list) {
+    t.error(err)
+    t.deepEqual(list, ['helloworld'])
+    t.true(asyncCalled)
+  }))
+
+  input.write('hello')
+  input.write('world')
+  input.end()
+})
