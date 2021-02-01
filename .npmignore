@@ -8,3 +8,5 @@ _benchdb_*
 .travis.yml
 .github
 .nyc_output
+bench.js
+test.js
