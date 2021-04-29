@@ -1,0 +1,14 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: tap
+    versions:
+    - ">= 13.a, < 14"
+  - dependency-name: tap
+    versions:
+    - ">= 14.a, < 15"
