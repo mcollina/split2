@@ -304,10 +304,11 @@ test('maximum buffer limit', function (t) {
   t.plan(1)
 
   const input = split({ maxLength: 2 })
-
-  input.pipe(strcb(function (err, list) {
+  input.on('error', function (err) {
     t.ok(err)
-  }))
+  })
+
+  input.resume()
 
   input.write('hey')
 })

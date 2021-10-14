@@ -48,7 +48,10 @@ function transform (chunk, enc, cb) {
   }
 
   this.overflow = this[kLast].length > this.maxLength
-  if (this.overflow && !this.skipOverflow) return cb(new Error('maximum buffer reached'))
+  if (this.overflow && !this.skipOverflow) {
+    cb(new Error('maximum buffer reached'))
+    return
+  }
 
   cb()
 }
@@ -124,8 +127,12 @@ function split (matcher, mapper, options) {
   stream.matcher = matcher
   stream.mapper = mapper
   stream.maxLength = options.maxLength
-  stream.skipOverflow = options.skipOverflow
+  stream.skipOverflow = options.skipOverflow || false
   stream.overflow = false
+  stream._destroy = function (err, cb) {
+    this._writableState.errorEmitted = false
+    cb(err)
+  }
 
   return stream
 }
