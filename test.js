@@ -1,16 +1,15 @@
 'use strict'
 
-var test = require('tape')
-var split = require('./')
-var callback = require('callback-stream')
-var Buffer = require('safe-buffer').Buffer
-var strcb = callback.bind(null, { decodeStrings: false })
-var objcb = callback.bind(null, { objectMode: true })
+const test = require('tape')
+const split = require('./')
+const callback = require('callback-stream')
+const strcb = callback.bind(null, { decodeStrings: false })
+const objcb = callback.bind(null, { objectMode: true })
 
 test('split two lines on end', function (t) {
   t.plan(2)
 
-  var input = split()
+  const input = split()
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
@@ -23,7 +22,7 @@ test('split two lines on end', function (t) {
 test('split two lines on two writes', function (t) {
   t.plan(2)
 
-  var input = split()
+  const input = split()
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
@@ -38,7 +37,7 @@ test('split two lines on two writes', function (t) {
 test('split four lines on three writes', function (t) {
   t.plan(2)
 
-  var input = split()
+  const input = split()
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
@@ -54,7 +53,7 @@ test('split four lines on three writes', function (t) {
 test('accumulate multiple writes', function (t) {
   t.plan(2)
 
-  var input = split()
+  const input = split()
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
@@ -69,7 +68,7 @@ test('accumulate multiple writes', function (t) {
 test('split using a custom string matcher', function (t) {
   t.plan(2)
 
-  var input = split('~')
+  const input = split('~')
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
@@ -82,7 +81,7 @@ test('split using a custom string matcher', function (t) {
 test('split using a custom regexp matcher', function (t) {
   t.plan(2)
 
-  var input = split(/~/)
+  const input = split(/~/)
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
@@ -95,7 +94,7 @@ test('split using a custom regexp matcher', function (t) {
 test('support an option argument', function (t) {
   t.plan(2)
 
-  var input = split({ highWaterMark: 2 })
+  const input = split({ highWaterMark: 2 })
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
@@ -108,10 +107,10 @@ test('support an option argument', function (t) {
 test('support a mapper function', function (t) {
   t.plan(2)
 
-  var a = { a: '42' }
-  var b = { b: '24' }
+  const a = { a: '42' }
+  const b = { b: '24' }
 
-  var input = split(JSON.parse)
+  const input = split(JSON.parse)
 
   input.pipe(objcb(function (err, list) {
     t.error(err)
@@ -126,7 +125,7 @@ test('support a mapper function', function (t) {
 test('split lines windows-style', function (t) {
   t.plan(2)
 
-  var input = split()
+  const input = split()
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
@@ -139,7 +138,7 @@ test('split lines windows-style', function (t) {
 test('splits a buffer', function (t) {
   t.plan(2)
 
-  var input = split()
+  const input = split()
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
@@ -152,7 +151,7 @@ test('splits a buffer', function (t) {
 test('do not end on undefined', function (t) {
   t.plan(2)
 
-  var input = split(function (line) { })
+  const input = split(function (line) { })
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
@@ -165,7 +164,7 @@ test('do not end on undefined', function (t) {
 test('has destroy method', function (t) {
   t.plan(1)
 
-  var input = split(function (line) { })
+  const input = split(function (line) { })
 
   input.on('close', function () {
     t.ok(true, 'close emitted')
@@ -178,9 +177,9 @@ test('has destroy method', function (t) {
 test('support custom matcher and mapper', function (t) {
   t.plan(4)
 
-  var a = { a: '42' }
-  var b = { b: '24' }
-  var input = split('~', JSON.parse)
+  const a = { a: '42' }
+  const b = { b: '24' }
+  const input = split('~', JSON.parse)
 
   t.equal(input.matcher, '~')
   t.equal(typeof input.mapper, 'function')
@@ -198,7 +197,7 @@ test('support custom matcher and mapper', function (t) {
 test('support custom matcher and options', function (t) {
   t.plan(6)
 
-  var input = split('~', { highWaterMark: 1024 })
+  const input = split('~', { highWaterMark: 1024 })
 
   t.equal(input.matcher, '~')
   t.equal(typeof input.mapper, 'function')
@@ -216,9 +215,9 @@ test('support custom matcher and options', function (t) {
 test('support mapper and options', function (t) {
   t.plan(6)
 
-  var a = { a: '42' }
-  var b = { b: '24' }
-  var input = split(JSON.parse, { highWaterMark: 1024 })
+  const a = { a: '42' }
+  const b = { b: '24' }
+  const input = split(JSON.parse, { highWaterMark: 1024 })
 
   t.ok(input.matcher instanceof RegExp, 'matcher is RegExp')
   t.equal(typeof input.mapper, 'function')
@@ -238,15 +237,15 @@ test('support mapper and options', function (t) {
 test('split utf8 chars', function (t) {
   t.plan(2)
 
-  var input = split()
+  const input = split()
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
     t.deepEqual(list, ['烫烫烫', '锟斤拷'])
   }))
 
-  var buf = Buffer.from('烫烫烫\r\n锟斤拷', 'utf8')
-  for (var i = 0; i < buf.length; ++i) {
+  const buf = Buffer.from('烫烫烫\r\n锟斤拷', 'utf8')
+  for (let i = 0; i < buf.length; ++i) {
     input.write(buf.slice(i, i + 1))
   }
   input.end()
@@ -255,16 +254,16 @@ test('split utf8 chars', function (t) {
 test('split utf8 chars 2by2', function (t) {
   t.plan(2)
 
-  var input = split()
+  const input = split()
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
     t.deepEqual(list, ['烫烫烫', '烫烫烫'])
   }))
 
-  var str = '烫烫烫\r\n烫烫烫'
-  var buf = Buffer.from(str, 'utf8')
-  for (var i = 0; i < buf.length; i += 2) {
+  const str = '烫烫烫\r\n烫烫烫'
+  const buf = Buffer.from(str, 'utf8')
+  for (let i = 0; i < buf.length; i += 2) {
     input.write(buf.slice(i, i + 2))
   }
   input.end()
@@ -273,7 +272,7 @@ test('split utf8 chars 2by2', function (t) {
 test('split lines when the \n comes at the end of a chunk', function (t) {
   t.plan(2)
 
-  var input = split()
+  const input = split()
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
@@ -287,15 +286,15 @@ test('split lines when the \n comes at the end of a chunk', function (t) {
 test('truncated utf-8 char', function (t) {
   t.plan(2)
 
-  var input = split()
+  const input = split()
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
     t.deepEqual(list, ['烫' + Buffer.from('e7', 'hex').toString()])
   }))
 
-  var str = '烫烫'
-  var buf = Buffer.from(str, 'utf8')
+  const str = '烫烫'
+  const buf = Buffer.from(str, 'utf8')
 
   input.write(buf.slice(0, 3))
   input.end(buf.slice(3, 4))
@@ -304,17 +303,18 @@ test('truncated utf-8 char', function (t) {
 test('maximum buffer limit', function (t) {
   t.plan(1)
 
-  var input = split({ maxLength: 2 })
-
-  input.pipe(strcb(function (err, list) {
+  const input = split({ maxLength: 2 })
+  input.on('error', function (err) {
     t.ok(err)
-  }))
+  })
+
+  input.resume()
 
   input.write('hey')
 })
 
 test('readable highWaterMark', function (t) {
-  var input = split()
+  const input = split()
   t.equal(input._readableState.highWaterMark, 16)
   t.end()
 })
@@ -322,7 +322,7 @@ test('readable highWaterMark', function (t) {
 test('maxLength < chunk size', function (t) {
   t.plan(2)
 
-  var input = split({ maxLength: 2 })
+  const input = split({ maxLength: 2 })
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
@@ -335,7 +335,7 @@ test('maxLength < chunk size', function (t) {
 test('maximum buffer limit w/skip', function (t) {
   t.plan(2)
 
-  var input = split({ maxLength: 2, skipOverflow: true })
+  const input = split({ maxLength: 2, skipOverflow: true })
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
@@ -351,8 +351,8 @@ test('maximum buffer limit w/skip', function (t) {
 test("don't modify the options object", function (t) {
   t.plan(2)
 
-  var options = {}
-  var input = split(options)
+  const options = {}
+  const input = split(options)
 
   input.pipe(strcb(function (err, list) {
     t.error(err)
@@ -364,8 +364,8 @@ test("don't modify the options object", function (t) {
 
 test('mapper throws flush', function (t) {
   t.plan(1)
-  var error = new Error()
-  var input = split(function () {
+  const error = new Error()
+  const input = split(function () {
     throw error
   })
 
@@ -376,10 +376,10 @@ test('mapper throws flush', function (t) {
 })
 
 test('mapper throws on transform', function (t) {
-  t.plan(2)
+  t.plan(1)
 
-  var error = new Error()
-  var input = split(function (l) {
+  const error = new Error()
+  const input = split(function (l) {
     throw error
   })
 

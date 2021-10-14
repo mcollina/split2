@@ -1,9 +1,9 @@
 'use strict'
 
-var split = require('./')
-var bench = require('fastbench')
-var binarySplit = require('binary-split')
-var fs = require('fs')
+const split = require('./')
+const bench = require('fastbench')
+const binarySplit = require('binary-split')
+const fs = require('fs')
 
 function benchSplit (cb) {
   fs.createReadStream('package.json')
@@ -19,7 +19,7 @@ function benchBinarySplit (cb) {
     .resume()
 }
 
-var run = bench([
+const run = bench([
   benchSplit,
   benchBinarySplit
 ], 10000)

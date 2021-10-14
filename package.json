@@ -30,11 +30,7 @@
     "fastbench": "^1.0.0",
     "nyc": "^15.0.1",
     "pre-commit": "^1.1.2",
-    "safe-buffer": "^5.1.1",
     "standard": "^16.0.1",
     "tape": "^5.0.0"
-  },
-  "dependencies": {
-    "readable-stream": "^3.0.0"
   }
 }
