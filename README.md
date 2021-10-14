@@ -5,7 +5,7 @@
 Break up a stream and reassemble it so that each line is a chunk.
 `split2` is inspired by [@dominictarr](https://github.com/dominictarr) [`split`](https://github.com/dominictarr/split) module,
 and it is totally API compatible with it.
-However, it is based on Node.js core [`Transform`](https://nodejs.org/api/stream.html#stream_new_stream_transform_options) via [`readable-stream`](https://github.com/nodejs/readable-stream)
+However, it is based on Node.js core [`Transform`](https://nodejs.org/api/stream.html#stream_new_stream_transform_options).
 
 `matcher` may be a `String`, or a `RegExp`. Example, read every line in a file ...
 
@@ -68,21 +68,9 @@ fs.createReadStream(file)
 However, in [@dominictarr](https://github.com/dominictarr) [`split`](https://github.com/dominictarr/split) the mapper
 is wrapped in a try-catch, while here it is not: if your parsing logic can throw, wrap it yourself. Otherwise, you can also use the stream error handling when mapper function throw.
 
-# Benchmark
-
-```bash
-$ node bench.js
-benchSplit*10000: 1484.983ms
-benchBinarySplit*10000: 1484.080ms
-benchSplit*10000: 1407.334ms
-benchBinarySplit*10000: 1500.281ms
-```
-
-Benchmark taken on Node 8.11.3, on a Macbook i5 2018.
-
 # License
 
-Copyright (c) 2014-2018, Matteo Collina <hello@matteocollina.com>
+Copyright (c) 2014-2021, Matteo Collina <hello@matteocollina.com>
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
