@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014-2018, Matteo Collina <hello@matteocollina.com>
+Copyright (c) 2014-2021, Matteo Collina <hello@matteocollina.com>
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -16,15 +16,15 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 'use strict'
 
-const { Transform } = require('readable-stream')
+const { Transform } = require('stream')
 const { StringDecoder } = require('string_decoder')
 const kLast = Symbol('last')
 const kDecoder = Symbol('decoder')
 
 function transform (chunk, enc, cb) {
-  var list
+  let list
   if (this.overflow) { // Line buffer is full. Skip to start of next line.
-    var buf = this[kDecoder].write(chunk)
+    const buf = this[kDecoder].write(chunk)
     list = buf.split(this.matcher)
 
     if (list.length === 1) return cb() // Line ending not found. Discard entire chunk.
@@ -39,7 +39,7 @@ function transform (chunk, enc, cb) {
 
   this[kLast] = list.pop()
 
-  for (var i = 0; i < list.length; i++) {
+  for (let i = 0; i < list.length; i++) {
     try {
       push(this, this.mapper(list[i]))
     } catch (error) {
@@ -112,6 +112,7 @@ function split (matcher, mapper, options) {
   }
 
   options = Object.assign({}, options)
+  options.autoDestroy = true
   options.transform = transform
   options.flush = flush
   options.readableObjectMode = true
