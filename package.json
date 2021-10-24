@@ -22,6 +22,9 @@
   "bugs": {
     "url": "http://github.com/mcollina/split2/issues"
   },
+  "engines": {
+    "node": ">= 10.x"
+  },
   "author": "Matteo Collina <hello@matteocollina.com>",
   "license": "ISC",
   "devDependencies": {
