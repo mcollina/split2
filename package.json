@@ -23,7 +23,7 @@
     "url": "http://github.com/mcollina/split2/issues"
   },
   "engines": {
-    "node": ">= 10.x"
+    "node": ">= 12.x"
   },
   "author": "Matteo Collina <hello@matteocollina.com>",
   "license": "ISC",
