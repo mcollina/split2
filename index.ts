@@ -16,12 +16,30 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 'use strict'
 
-const { Transform } = require('stream')
-const { StringDecoder } = require('string_decoder')
+import { Transform } from 'stream'
+import type { TransformOptions, TransformCallback } from 'stream'
+import { StringDecoder } from 'string_decoder'
 const kLast = Symbol('last')
 const kDecoder = Symbol('decoder')
 
-function transform (chunk, enc, cb) {
+export type Matcher = string | RegExp;
+export type Mapper = (line: string) => any;
+export interface Options extends TransformOptions {
+  maxLength?: number | undefined;
+  skipOverflow?: boolean;
+}
+
+export interface Split2Transform extends Transform {
+  [kLast]: string;
+  [kDecoder]: StringDecoder;
+  matcher: Matcher;
+  mapper: Mapper;
+  maxLength: number;
+  skipOverflow: boolean;
+  overflow: boolean;
+}
+
+function transform (this: Split2Transform, chunk: any, enc: BufferEncoding, cb: TransformCallback) {
   let list
   if (this.overflow) { // Line buffer is full. Skip to start of next line.
     const buf = this[kDecoder].write(chunk)
@@ -37,12 +55,12 @@ function transform (chunk, enc, cb) {
     list = this[kLast].split(this.matcher)
   }
 
-  this[kLast] = list.pop()
+  this[kLast] = list.pop() as string
 
   for (let i = 0; i < list.length; i++) {
     try {
       push(this, this.mapper(list[i]))
-    } catch (error) {
+    } catch (error: any) {
       return cb(error)
     }
   }
@@ -56,14 +74,14 @@ function transform (chunk, enc, cb) {
   cb()
 }
 
-function flush (cb) {
+function flush (this: Split2Transform, cb: TransformCallback) {
   // forward any gibberish left in there
   this[kLast] += this[kDecoder].end()
 
   if (this[kLast]) {
     try {
       push(this, this.mapper(this[kLast]))
-    } catch (error) {
+    } catch (error: any) {
       return cb(error)
     }
   }
@@ -71,17 +89,17 @@ function flush (cb) {
   cb()
 }
 
-function push (self, val) {
+function push (self: Split2Transform, val: any) {
   if (val !== undefined) {
     self.push(val)
   }
 }
 
-function noop (incoming) {
+function noop (incoming: string) {
   return incoming
 }
 
-function split (matcher, mapper, options) {
+function split (matcher?: Matcher, mapper?: Mapper, options?: Options) {
   // Set defaults for any arguments not supplied.
   matcher = matcher || /\r?\n/
   mapper = mapper || noop
@@ -104,7 +122,7 @@ function split (matcher, mapper, options) {
     case 2:
       // If mapper and options are arguments.
       if (typeof matcher === 'function') {
-        options = mapper
+        options = mapper as any
         mapper = matcher
         matcher = /\r?\n/
       // If matcher and options are arguments.
@@ -120,18 +138,18 @@ function split (matcher, mapper, options) {
   options.flush = flush
   options.readableObjectMode = true
 
-  const stream = new Transform(options)
+  const stream = new Transform(options) as Split2Transform;
 
   stream[kLast] = ''
   stream[kDecoder] = new StringDecoder('utf8')
   stream.matcher = matcher
   stream.mapper = mapper
-  stream.maxLength = options.maxLength
+  stream.maxLength = options.maxLength as number;
   stream.skipOverflow = options.skipOverflow || false
   stream.overflow = false
   stream._destroy = function (err, cb) {
     // Weird Node v12 bug that we need to work around
-    this._writableState.errorEmitted = false
+    (this as any)._writableState.errorEmitted = false
     cb(err)
   }
 
@@ -139,3 +157,4 @@ function split (matcher, mapper, options) {
 }
 
 module.exports = split
+export default split

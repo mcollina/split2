@@ -4,11 +4,12 @@
   "description": "split a Text Stream into a Line Stream, using Stream 3",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "lint": "standard --verbose",
     "unit": "nyc --lines 100 --branches 100 --functions 100 --check-coverage --reporter=text tape test.js",
     "coverage": "nyc --reporter=html --reporter=cobertura --reporter=text tape test/test.js",
-    "test:report": "npm run lint && npm run unit:report",
-    "test": "npm run lint && npm run unit",
+    "test:report": "npm run build && npm run unit:report",
+    "test": "npm run build && npm run unit",
     "legacy": "tape test.js"
   },
   "pre-commit": [
@@ -28,12 +29,14 @@
   "author": "Matteo Collina <hello@matteocollina.com>",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^16",
     "binary-split": "^1.0.3",
     "callback-stream": "^1.1.0",
     "fastbench": "^1.0.0",
     "nyc": "^15.0.1",
     "pre-commit": "^1.1.2",
     "standard": "^17.0.0",
-    "tape": "^5.0.0"
+    "tape": "^5.0.0",
+    "typescript": "^4.6.3"
   }
 }
