@@ -16,27 +16,31 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/no-namespace */
 
 'use strict'
 
-import { Transform } from 'stream'
+import stream = require('stream')
 import type { TransformOptions, TransformCallback } from 'stream'
-import { StringDecoder } from 'string_decoder'
+import string_decoder = require('string_decoder')
+const Transform = stream.Transform
 const kLast = Symbol('last')
 const kDecoder = Symbol('decoder')
 
-export type Matcher = string | RegExp
-export type Mapper = (line: string) => any
-export interface Options extends TransformOptions {
-  maxLength?: number | undefined
-  skipOverflow?: boolean
+namespace split {
+  export type Matcher = string | RegExp
+  export type Mapper = (line: string) => any
+  export interface Options extends TransformOptions {
+    maxLength?: number | undefined
+    skipOverflow?: boolean
+  }
 }
 
-interface Split2Transform extends Transform {
+interface Split2Transform extends stream.Transform {
   [kLast]: string
-  [kDecoder]: StringDecoder
-  matcher: Matcher
-  mapper: Mapper
+  [kDecoder]: string_decoder.StringDecoder
+  matcher: split.Matcher
+  mapper: split.Mapper
   maxLength: number
   skipOverflow: boolean
   overflow: boolean
@@ -102,11 +106,11 @@ function noop (incoming: string): any {
   return incoming
 }
 
-function split (matcher: Matcher, Mapper: Mapper, options?: Options): Transform
-function split (mapper: Mapper, options?: Options): Transform
-function split (matcher: Matcher, options?: Options): Transform
-function split (options?: Options): Transform
-function split (matcher?: any, mapper?: any, options?: any): Transform {
+function split (matcher: split.Matcher, Mapper: split.Mapper, options?: split.Options): stream.Transform
+function split (mapper: split.Mapper, options?: split.Options): stream.Transform
+function split (matcher: split.Matcher, options?: split.Options): stream.Transform
+function split (options?: split.Options): stream.Transform
+function split (matcher?: any, mapper?: any, options?: any): stream.Transform {
   // Set defaults for any arguments not supplied.
   matcher = matcher || /\r?\n/
   mapper = mapper || noop
@@ -148,7 +152,7 @@ function split (matcher?: any, mapper?: any, options?: any): Transform {
   const stream = new Transform(options) as Split2Transform
 
   stream[kLast] = ''
-  stream[kDecoder] = new StringDecoder('utf8')
+  stream[kDecoder] = new string_decoder.StringDecoder('utf8')
   stream.matcher = matcher
   stream.mapper = mapper
   stream.maxLength = options.maxLength as number
@@ -163,5 +167,4 @@ function split (matcher?: any, mapper?: any, options?: any): Transform {
   return stream
 }
 
-module.exports = split
-export default split
+export = split

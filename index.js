@@ -15,10 +15,11 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/no-namespace */
 'use strict';
-Object.defineProperty(exports, "__esModule", { value: true });
-const stream_1 = require("stream");
-const string_decoder_1 = require("string_decoder");
+const stream = require("stream");
+const string_decoder = require("string_decoder");
+const Transform = stream.Transform;
 const kLast = Symbol('last');
 const kDecoder = Symbol('decoder');
 function transform(chunk, enc, cb) {
@@ -110,9 +111,9 @@ function split(matcher, mapper, options) {
     options.transform = transform;
     options.flush = flush;
     options.readableObjectMode = true;
-    const stream = new stream_1.Transform(options);
+    const stream = new Transform(options);
     stream[kLast] = '';
-    stream[kDecoder] = new string_decoder_1.StringDecoder('utf8');
+    stream[kDecoder] = new string_decoder.StringDecoder('utf8');
     stream.matcher = matcher;
     stream.mapper = mapper;
     stream.maxLength = options.maxLength;
@@ -126,4 +127,3 @@ function split(matcher, mapper, options) {
     return stream;
 }
 module.exports = split;
-exports.default = split;

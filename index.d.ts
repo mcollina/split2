@@ -1,14 +1,16 @@
 /// <reference types="node" />
-import { Transform } from 'stream';
+import stream = require('stream');
 import type { TransformOptions } from 'stream';
-export declare type Matcher = string | RegExp;
-export declare type Mapper = (line: string) => any;
-export interface Options extends TransformOptions {
-    maxLength?: number | undefined;
-    skipOverflow?: boolean;
+declare namespace split {
+    type Matcher = string | RegExp;
+    type Mapper = (line: string) => any;
+    interface Options extends TransformOptions {
+        maxLength?: number | undefined;
+        skipOverflow?: boolean;
+    }
 }
-declare function split(matcher: Matcher, Mapper: Mapper, options?: Options): Transform;
-declare function split(mapper: Mapper, options?: Options): Transform;
-declare function split(matcher: Matcher, options?: Options): Transform;
-declare function split(options?: Options): Transform;
-export default split;
+declare function split(matcher: split.Matcher, Mapper: split.Mapper, options?: split.Options): stream.Transform;
+declare function split(mapper: split.Mapper, options?: split.Options): stream.Transform;
+declare function split(matcher: split.Matcher, options?: split.Options): stream.Transform;
+declare function split(options?: split.Options): stream.Transform;
+export = split;
