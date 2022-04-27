@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "lint": "standard --verbose",
+    "lint": "ts-standard --verbose",
     "unit": "nyc --lines 100 --branches 100 --functions 100 --check-coverage --reporter=text tape test.js",
-    "coverage": "nyc --reporter=html --reporter=cobertura --reporter=text tape test/test.js",
-    "test:report": "npm run build && npm run unit:report",
-    "test": "npm run build && npm run unit",
+    "coverage": "nyc --check-coverage --reporter=html --reporter=cobertura --reporter=text tape test.js",
+    "test:report": "npm run build && npm run lint && npm run coverage",
+    "test": "npm run build && npm run lint && npm run unit",
     "legacy": "tape test.js"
   },
   "pre-commit": [
@@ -35,8 +35,14 @@
     "fastbench": "^1.0.0",
     "nyc": "^15.0.1",
     "pre-commit": "^1.1.2",
-    "standard": "^17.0.0",
     "tape": "^5.0.0",
-    "typescript": "^4.6.3"
+    "ts-standard": "~11.0.0",
+    "typescript": "~4.4.0"
+  },
+  "ts-standard": {
+    "files": [
+      "index.ts",
+      "test.js"
+    ]
   }
 }

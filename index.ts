@@ -14,6 +14,9 @@ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
 'use strict'
 
 import { Transform } from 'stream'
@@ -22,24 +25,24 @@ import { StringDecoder } from 'string_decoder'
 const kLast = Symbol('last')
 const kDecoder = Symbol('decoder')
 
-export type Matcher = string | RegExp;
-export type Mapper = (line: string) => any;
+export type Matcher = string | RegExp
+export type Mapper = (line: string) => any
 export interface Options extends TransformOptions {
-  maxLength?: number | undefined;
-  skipOverflow?: boolean;
+  maxLength?: number | undefined
+  skipOverflow?: boolean
 }
 
 export interface Split2Transform extends Transform {
-  [kLast]: string;
-  [kDecoder]: StringDecoder;
-  matcher: Matcher;
-  mapper: Mapper;
-  maxLength: number;
-  skipOverflow: boolean;
-  overflow: boolean;
+  [kLast]: string
+  [kDecoder]: StringDecoder
+  matcher: Matcher
+  mapper: Mapper
+  maxLength: number
+  skipOverflow: boolean
+  overflow: boolean
 }
 
-function transform (this: Split2Transform, chunk: any, enc: BufferEncoding, cb: TransformCallback) {
+function transform (this: Split2Transform, chunk: any, enc: BufferEncoding, cb: TransformCallback): void {
   let list
   if (this.overflow) { // Line buffer is full. Skip to start of next line.
     const buf = this[kDecoder].write(chunk)
@@ -74,7 +77,7 @@ function transform (this: Split2Transform, chunk: any, enc: BufferEncoding, cb: 
   cb()
 }
 
-function flush (this: Split2Transform, cb: TransformCallback) {
+function flush (this: Split2Transform, cb: TransformCallback): void {
   // forward any gibberish left in there
   this[kLast] += this[kDecoder].end()
 
@@ -89,17 +92,17 @@ function flush (this: Split2Transform, cb: TransformCallback) {
   cb()
 }
 
-function push (self: Split2Transform, val: any) {
+function push (self: Split2Transform, val: any): void {
   if (val !== undefined) {
     self.push(val)
   }
 }
 
-function noop (incoming: string) {
+function noop (incoming: string): any {
   return incoming
 }
 
-function split (matcher?: Matcher, mapper?: Mapper, options?: Options) {
+function split (matcher?: Matcher, mapper?: Mapper, options?: Options): Split2Transform {
   // Set defaults for any arguments not supplied.
   matcher = matcher || /\r?\n/
   mapper = mapper || noop
@@ -138,13 +141,13 @@ function split (matcher?: Matcher, mapper?: Mapper, options?: Options) {
   options.flush = flush
   options.readableObjectMode = true
 
-  const stream = new Transform(options) as Split2Transform;
+  const stream = new Transform(options) as Split2Transform
 
   stream[kLast] = ''
   stream[kDecoder] = new StringDecoder('utf8')
   stream.matcher = matcher
   stream.mapper = mapper
-  stream.maxLength = options.maxLength as number;
+  stream.maxLength = options.maxLength as number
   stream.skipOverflow = options.skipOverflow || false
   stream.overflow = false
   stream._destroy = function (err, cb) {
