@@ -32,7 +32,7 @@ export interface Options extends TransformOptions {
   skipOverflow?: boolean
 }
 
-export interface Split2Transform extends Transform {
+interface Split2Transform extends Transform {
   [kLast]: string
   [kDecoder]: StringDecoder
   matcher: Matcher
@@ -102,7 +102,11 @@ function noop (incoming: string): any {
   return incoming
 }
 
-function split (matcher?: Matcher, mapper?: Mapper, options?: Options): Split2Transform {
+function split (matcher: Matcher, Mapper: Mapper, options?: Options): Transform
+function split (mapper: Mapper, options?: Options): Transform
+function split (matcher: Matcher, options?: Options): Transform
+function split (options?: Options): Transform
+function split (matcher?: any, mapper?: any, options?: any): Transform {
   // Set defaults for any arguments not supplied.
   matcher = matcher || /\r?\n/
   mapper = mapper || noop
@@ -125,7 +129,7 @@ function split (matcher?: Matcher, mapper?: Mapper, options?: Options): Split2Tr
     case 2:
       // If mapper and options are arguments.
       if (typeof matcher === 'function') {
-        options = mapper as any
+        options = mapper
         mapper = matcher
         matcher = /\r?\n/
       // If matcher and options are arguments.
