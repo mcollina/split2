@@ -1,9 +1,6 @@
 {
   "compilerOptions": {
-    "lib": [
-      "es2021"
-    ],
-    "target": "es2021",
+    "target": "es2015",
     "module": "commonjs",
     "strict": true,
     "outDir": "./",
