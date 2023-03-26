@@ -1,6 +1,6 @@
 {
   "name": "split2",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "split a Text Stream into a Line Stream, using Stream 3",
   "main": "index.js",
   "scripts": {
