@@ -129,11 +129,6 @@ function split (matcher, mapper, options) {
   stream.maxLength = options.maxLength
   stream.skipOverflow = options.skipOverflow || false
   stream.overflow = false
-  stream._destroy = function (err, cb) {
-    // Weird Node v12 bug that we need to work around
-    this._writableState.errorEmitted = false
-    cb(err)
-  }
 
   return stream
 }
