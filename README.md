@@ -68,6 +68,27 @@ fs.createReadStream(file)
 However, in [@dominictarr](https://github.com/dominictarr) [`split`](https://github.com/dominictarr/split) the mapper
 is wrapped in a try-catch, while here it is not: if your parsing logic can throw, wrap it yourself. Otherwise, you can also use the stream error handling when mapper function throw.
 
+# Benchmark
+
+The benchmark reads `package.json` and splits it into lines 10,000 times with `split2`, `binary-split`, and Node.js [`readline.createInterface`](https://nodejs.org/api/readline.html#readlinecreateinterfaceoptions). Run it with:
+
+```sh
+npm run benchmark -- --no-color
+```
+
+Example results on Node.js 24.18.0, Linux x64, with an Intel Core i7-7700:
+
+```text
+benchSplit*10000: 714.092ms
+benchBinarySplit*10000: 866.643ms
+benchCreateInterface*10000: 869.476ms
+benchSplit*10000: 683.199ms
+benchBinarySplit*10000: 772.226ms
+benchCreateInterface*10000: 739.976ms
+```
+
+Results will vary by machine and Node.js version.
+
 # License
 
 Copyright (c) 2014-2021, Matteo Collina <hello@matteocollina.com>

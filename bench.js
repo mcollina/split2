@@ -4,6 +4,7 @@ const split = require('./')
 const bench = require('fastbench')
 const binarySplit = require('binary-split')
 const fs = require('fs')
+const { createInterface } = require('readline')
 
 function benchSplit (cb) {
   fs.createReadStream('package.json')
@@ -19,9 +20,17 @@ function benchBinarySplit (cb) {
     .resume()
 }
 
+function benchCreateInterface (cb) {
+  createInterface({
+    input: fs.createReadStream('package.json'),
+    crlfDelay: Infinity
+  }).on('close', cb)
+}
+
 const run = bench([
   benchSplit,
-  benchBinarySplit
+  benchBinarySplit,
+  benchCreateInterface
 ], 10000)
 
 run(run)
