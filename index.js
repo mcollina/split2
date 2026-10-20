@@ -57,6 +57,8 @@ function transform (chunk, enc, cb) {
 }
 
 function flush (cb) {
+  if (this.overflow) return cb()
+
   // forward any gibberish left in there
   this[kLast] += this[kDecoder].end()
 

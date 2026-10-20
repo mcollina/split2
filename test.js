@@ -348,6 +348,60 @@ test('maximum buffer limit w/skip', function (t) {
   input.end()
 })
 
+for (const { name, chunks, expected } of [
+  { name: 'skip overflow at EOF in one chunk', chunks: ['123'], expected: [] },
+  { name: 'skip overflow at EOF across chunks', chunks: ['123', '456'], expected: [] },
+  { name: 'keep preceding lines when skipping overflow at EOF', chunks: ['a\n123', '456'], expected: ['a'] },
+  { name: 'skip overflow with an empty final chunk', chunks: ['123', ''], expected: [] },
+  { name: 'flush a valid tail after recovering from overflow', chunks: ['123', '456\na\nbc'], expected: ['a', 'bc'] },
+  { name: 'flush a final line at the buffer limit', chunks: ['ab'], expected: ['ab'] }
+]) {
+  test(name, function (t) {
+    t.plan(2)
+
+    const input = split({ maxLength: 2, skipOverflow: true })
+    input.pipe(strcb(function (err, list) {
+      t.error(err)
+      t.deepEqual(list, expected)
+    }))
+
+    for (let i = 0; i < chunks.length - 1; i++) input.write(chunks[i])
+    input.end(chunks[chunks.length - 1])
+  })
+}
+
+test('do not map the buffered prefix of an overflowed final line', function (t) {
+  t.plan(3)
+
+  const mapped = []
+  const input = split(function (line) {
+    mapped.push(line)
+    return line
+  }, { maxLength: 2, skipOverflow: true })
+
+  input.pipe(strcb(function (err, list) {
+    t.error(err)
+    t.deepEqual(list, ['a'])
+    t.deepEqual(mapped, ['a'])
+  }))
+
+  input.write('a\n123')
+  input.end('456')
+})
+
+test('skip decoder output when the final line has overflowed', function (t) {
+  t.plan(2)
+
+  const input = split({ maxLength: 2, skipOverflow: true })
+  input.pipe(strcb(function (err, list) {
+    t.error(err)
+    t.deepEqual(list, [])
+  }))
+
+  input.write('123')
+  input.end(Buffer.from([0xe7]))
+})
+
 test("don't modify the options object", function (t) {
   t.plan(2)
 
