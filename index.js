@@ -20,6 +20,7 @@ const { Transform } = require('stream')
 const { StringDecoder } = require('string_decoder')
 const kLast = Symbol('last')
 const kDecoder = Symbol('decoder')
+const defaultMatcher = /\r?\n/
 
 function transform (chunk, enc, cb) {
   let list
@@ -33,8 +34,16 @@ function transform (chunk, enc, cb) {
     list.shift()
     this.overflow = false
   } else {
-    this[kLast] += this[kDecoder].write(chunk)
-    list = this[kLast].split(this.matcher)
+    const str = this[kDecoder].write(chunk)
+    this[kLast] += str
+    // Every match of the default matcher contains '\n', and the buffered
+    // partial line never does. If the new text has none either, there is
+    // nothing to split, so skip re-scanning the whole buffer.
+    if (this.matcher === defaultMatcher && !str.includes('\n')) {
+      list = [this[kLast]]
+    } else {
+      list = this[kLast].split(this.matcher)
+    }
   }
 
   this[kLast] = list.pop()
@@ -83,7 +92,7 @@ function noop (incoming) {
 
 function split (matcher, mapper, options) {
   // Set defaults for any arguments not supplied.
-  matcher = matcher || /\r?\n/
+  matcher = matcher || defaultMatcher
   mapper = mapper || noop
   options = options || {}
 
@@ -93,11 +102,11 @@ function split (matcher, mapper, options) {
       // If mapper is only argument.
       if (typeof matcher === 'function') {
         mapper = matcher
-        matcher = /\r?\n/
+        matcher = defaultMatcher
       // If options is only argument.
       } else if (typeof matcher === 'object' && !(matcher instanceof RegExp) && !matcher[Symbol.split]) {
         options = matcher
-        matcher = /\r?\n/
+        matcher = defaultMatcher
       }
       break
 
@@ -106,7 +115,7 @@ function split (matcher, mapper, options) {
       if (typeof matcher === 'function') {
         options = mapper
         mapper = matcher
-        matcher = /\r?\n/
+        matcher = defaultMatcher
       // If matcher and options are arguments.
       } else if (typeof mapper === 'object') {
         options = mapper

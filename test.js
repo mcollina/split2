@@ -407,3 +407,28 @@ test('supports Symbol.split', function (t) {
 
   input.end('hello~world')
 })
+
+test('split a line written across many chunks', function (t) {
+  t.plan(2)
+
+  const input = split(function (line) {
+    return line.length + ':' + line.slice(-3)
+  })
+
+  input.pipe(strcb(function (err, list) {
+    t.error(err)
+    t.deepEqual(list, ['100002:x€x', '1:b', '0:', '1:c'])
+  }))
+
+  const euro = Buffer.from('€')
+  for (let i = 0; i < 1000; i++) {
+    input.write('x'.repeat(100))
+  }
+  input.write(euro.slice(0, 1))
+  input.write(euro.slice(1))
+  input.write('x\r')
+  input.write('\nb\n')
+  input.write('\r')
+  input.write('\nc')
+  input.end()
+})
